@@ -1,0 +1,301 @@
+{
+    "q": "baku",
+    "rid": "6ef7f041e2f842369272a116a13375f7",
+    "rc": "OK",
+    "sr": [
+        {
+            "@type": "gaiaRegionResult",
+            "index": "0",
+            "gaiaId": "492",
+            "type": "CITY",
+            "regionNames": {
+                "fullName": "Baku, Azerbaijan",
+                "shortName": "Baku",
+                "displayName": "Baku, Azerbaijan",
+                "primaryDisplayName": "Baku",
+                "secondaryDisplayName": "Azerbaijan",
+                "lastSearchName": "Baku"
+            },
+            "essId": {
+                "sourceName": "GAI",
+                "sourceId": "492"
+            },
+            "coordinates": {
+                "lat": "40.369495",
+                "long": "49.836844"
+            },
+            "hierarchyInfo": {
+                "country": {
+                    "name": "Azerbaijan",
+                    "isoCode2": "AZ",
+                    "isoCode3": "AZE"
+                }
+            }
+        },
+        {
+            "@type": "gaiaRegionResult",
+            "index": "1",
+            "gaiaId": "726",
+            "type": "CITY",
+            "regionNames": {
+                "fullName": "Batumi, Adjara, Georgia",
+                "shortName": "Batumi",
+                "displayName": "Batumi, Adjara, Georgia",
+                "primaryDisplayName": "Batumi",
+                "secondaryDisplayName": "Adjara, Georgia",
+                "lastSearchName": "Batumi"
+            },
+            "essId": {
+                "sourceName": "GAI",
+                "sourceId": "726"
+            },
+            "coordinates": {
+                "lat": "41.642052",
+                "long": "41.627207"
+            },
+            "hierarchyInfo": {
+                "country": {
+                    "name": "Georgia",
+                    "isoCode2": "GE",
+                    "isoCode3": "GEO"
+                }
+            }
+        },
+        {
+            "@type": "gaiaRegionResult",
+            "index": "2",
+            "gaiaId": "553248633981744611",
+            "type": "NEIGHBORHOOD",
+            "regionNames": {
+                "fullName": "Bakırköy, Istanbul, Istanbul, Türkiye",
+                "shortName": "Bakırköy",
+                "displayName": "Bakırköy, Istanbul, Istanbul, Türkiye",
+                "primaryDisplayName": "Bakırköy",
+                "secondaryDisplayName": "Istanbul, Istanbul, Türkiye",
+                "lastSearchName": "Bakırköy"
+            },
+            "essId": {
+                "sourceName": "GAI",
+                "sourceId": "553248633981744611"
+            },
+            "coordinates": {
+                "lat": "40.979888",
+                "long": "28.833764"
+            },
+            "hierarchyInfo": {
+                "country": {
+                    "name": "Turkey",
+                    "isoCode2": "TR",
+                    "isoCode3": "TUR"
+                }
+            }
+        },
+        {
+            "@type": "gaiaRegionResult",
+            "index": "3",
+            "gaiaId": "6047767",
+            "type": "CITY",
+            "regionNames": {
+                "fullName": "Bakau, Kanifing, Gambia",
+                "shortName": "Bakau",
+                "displayName": "Bakau, Kanifing, Gambia",
+                "primaryDisplayName": "Bakau",
+                "secondaryDisplayName": "Kanifing, Gambia",
+                "lastSearchName": "Bakau"
+            },
+            "essId": {
+                "sourceName": "GAI",
+                "sourceId": "6047767"
+            },
+            "coordinates": {
+                "lat": "13.479439",
+                "long": "-16.670395"
+            },
+            "hierarchyInfo": {
+                "country": {
+                    "name": "Gambia",
+                    "isoCode2": "GM",
+                    "isoCode3": "GMB"
+                }
+            }
+        },
+        {
+            "@type": "gaiaRegionResult",
+            "index": "4",
+            "gaiaId": "6143974",
+            "type": "CITY",
+            "regionNames": {
+                "fullName": "Novkhana, Baku, Azerbaijan",
+                "shortName": "Novkhana",
+                "displayName": "Novkhana, Baku, Azerbaijan",
+                "primaryDisplayName": "Novkhana",
+                "secondaryDisplayName": "Baku, Azerbaijan",
+                "lastSearchName": "Novkhana"
+            },
+            "essId": {
+                "sourceName": "GAI",
+                "sourceId": "6143974"
+            },
+            "coordinates": {
+                "lat": "40.564429",
+                "long": "49.783408"
+            },
+            "hierarchyInfo": {
+                "country": {
+                    "name": "Azerbaijan",
+                    "isoCode2": "AZ",
+                    "isoCode3": "AZE"
+                }
+            }
+        },
+        {
+            "@type": "gaiaRegionResult",
+            "index": "5",
+            "gaiaId": "3000044739",
+            "type": "NEIGHBORHOOD",
+            "regionNames": {
+                "fullName": "Hövsan, Baku, Azerbaijan",
+                "shortName": "Hövsan",
+                "displayName": "Hövsan, Baku, Azerbaijan",
+                "primaryDisplayName": "Hövsan",
+                "secondaryDisplayName": "Baku, Azerbaijan",
+                "lastSearchName": "Hövsan"
+            },
+            "essId": {
+                "sourceName": "GAI",
+                "sourceId": "3000044739"
+            },
+            "coordinates": {
+                "lat": "40.370602",
+                "long": "50.081699"
+            },
+            "hierarchyInfo": {
+                "country": {
+                    "name": "Azerbaijan",
+                    "isoCode2": "AZ",
+                    "isoCode3": "AZE"
+                }
+            }
+        },
+        {
+            "@type": "gaiaRegionResult",
+            "index": "6",
+            "gaiaId": "6358586",
+            "type": "CITY",
+            "regionNames": {
+                "fullName": "Nardaran, Baku, Azerbaijan",
+                "shortName": "Nardaran",
+                "displayName": "Nardaran, Baku, Azerbaijan",
+                "primaryDisplayName": "Nardaran",
+                "secondaryDisplayName": "Baku, Azerbaijan",
+                "lastSearchName": "Nardaran"
+            },
+            "essId": {
+                "sourceName": "GAI",
+                "sourceId": "6358586"
+            },
+            "coordinates": {
+                "lat": "40.572632",
+                "long": "49.983166"
+            },
+            "hierarchyInfo": {
+                "country": {
+                    "name": "Azerbaijan",
+                    "isoCode2": "AZ",
+                    "isoCode3": "AZE"
+                }
+            }
+        },
+        {
+            "@type": "gaiaRegionResult",
+            "index": "7",
+            "gaiaId": "6360142",
+            "type": "CITY",
+            "regionNames": {
+                "fullName": "Bakuriani, Borjomi, Samtskhe-Javakheti, Georgia",
+                "shortName": "Bakuriani",
+                "displayName": "Bakuriani, Borjomi, Samtskhe-Javakheti, Georgia",
+                "primaryDisplayName": "Bakuriani",
+                "secondaryDisplayName": "Borjomi, Samtskhe-Javakheti, Georgia",
+                "lastSearchName": "Bakuriani"
+            },
+            "essId": {
+                "sourceName": "GAI",
+                "sourceId": "6360142"
+            },
+            "coordinates": {
+                "lat": "41.750966",
+                "long": "43.529181"
+            },
+            "hierarchyInfo": {
+                "country": {
+                    "name": "Georgia",
+                    "isoCode2": "GE",
+                    "isoCode3": "GEO"
+                }
+            }
+        },
+        {
+            "@type": "gaiaHotelResult",
+            "index": "8",
+            "hotelId": "36364008",
+            "type": "HOTEL",
+            "regionNames": {
+                "fullName": "Salam Baku Hotel, Baku, Azerbaijan",
+                "shortName": "Salam Baku Hotel",
+                "displayName": "Salam Baku Hotel, Baku, Azerbaijan",
+                "primaryDisplayName": "Salam Baku Hotel",
+                "secondaryDisplayName": "Baku, Azerbaijan",
+                "lastSearchName": "Salam Baku Hotel"
+            },
+            "essId": {
+                "sourceName": "LCM",
+                "sourceId": "36364008"
+            },
+            "coordinates": {
+                "lat": "40.372098",
+                "long": "49.83958"
+            },
+            "hierarchyInfo": {
+                "country": {
+                    "isoCode3": "AZE"
+                }
+            },
+            "cityId": "492",
+            "hotelAddress": {
+                "street": "1 Khagani street",
+                "city": "Baku",
+                "province": ""
+            }
+        },
+        {
+            "@type": "gaiaRegionResult",
+            "index": "9",
+            "gaiaId": "553248635939577205",
+            "type": "POI",
+            "regionNames": {
+                "fullName": "Baku City Circuit, Baku, Azerbaijan",
+                "shortName": "Baku City Circuit",
+                "displayName": "Baku City Circuit, Baku, Azerbaijan",
+                "primaryDisplayName": "Baku City Circuit",
+                "secondaryDisplayName": "Baku, Azerbaijan",
+                "lastSearchName": "Baku City Circuit"
+            },
+            "essId": {
+                "sourceName": "GAI",
+                "sourceId": "553248635939577205"
+            },
+            "coordinates": {
+                "lat": "40.36956824360193",
+                "long": "49.84046531913418"
+            },
+            "hierarchyInfo": {
+                "country": {
+                    "name": "Azerbaijan",
+                    "isoCode2": "AZ",
+                    "isoCode3": "AZE"
+                }
+            }
+        }
+    ]
+}

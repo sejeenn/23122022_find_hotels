@@ -1,0 +1,297 @@
+{
+    "q": "help",
+    "rid": "7a8ab7b09a734837af4845b5a8253693",
+    "rc": "OK",
+    "sr": [
+        {
+            "@type": "gaiaRegionResult",
+            "index": "0",
+            "gaiaId": "6204542",
+            "type": "CITY",
+            "regionNames": {
+                "fullName": "Helper, Utah, United States of America",
+                "shortName": "Helper",
+                "displayName": "Helper, Utah, United States",
+                "primaryDisplayName": "Helper",
+                "secondaryDisplayName": "Utah, United States",
+                "lastSearchName": "Helper"
+            },
+            "essId": {
+                "sourceName": "GAI",
+                "sourceId": "6204542"
+            },
+            "coordinates": {
+                "lat": "39.684132",
+                "long": "-110.854607"
+            },
+            "hierarchyInfo": {
+                "country": {
+                    "name": "United States",
+                    "isoCode2": "US",
+                    "isoCode3": "USA"
+                }
+            }
+        },
+        {
+            "@type": "gaiaRegionResult",
+            "index": "1",
+            "gaiaId": "6004945",
+            "type": "CITY",
+            "regionNames": {
+                "fullName": "Helotes, Texas, United States of America",
+                "shortName": "Helotes",
+                "displayName": "Helotes, Texas, United States",
+                "primaryDisplayName": "Helotes",
+                "secondaryDisplayName": "Texas, United States",
+                "lastSearchName": "Helotes"
+            },
+            "essId": {
+                "sourceName": "GAI",
+                "sourceId": "6004945"
+            },
+            "coordinates": {
+                "lat": "29.578005",
+                "long": "-98.689743"
+            },
+            "hierarchyInfo": {
+                "country": {
+                    "name": "United States",
+                    "isoCode2": "US",
+                    "isoCode3": "USA"
+                }
+            }
+        },
+        {
+            "@type": "gaiaRegionResult",
+            "index": "2",
+            "gaiaId": "4240",
+            "type": "CITY",
+            "regionNames": {
+                "fullName": "Vantaa, Uusimaa, Finland",
+                "shortName": "Vantaa",
+                "displayName": "Vantaa, Uusimaa, Finland",
+                "primaryDisplayName": "Vantaa",
+                "secondaryDisplayName": "Uusimaa, Finland",
+                "lastSearchName": "Vantaa"
+            },
+            "essId": {
+                "sourceName": "GAI",
+                "sourceId": "4240"
+            },
+            "coordinates": {
+                "lat": "60.319191",
+                "long": "24.951988"
+            },
+            "hierarchyInfo": {
+                "country": {
+                    "name": "Finland",
+                    "isoCode2": "FI",
+                    "isoCode3": "FIN"
+                }
+            }
+        },
+        {
+            "@type": "gaiaRegionResult",
+            "index": "3",
+            "gaiaId": "9298",
+            "type": "CITY",
+            "regionNames": {
+                "fullName": "Prairie View, Texas, United States of America",
+                "shortName": "Prairie View",
+                "displayName": "Prairie View, Texas, United States",
+                "primaryDisplayName": "Prairie View",
+                "secondaryDisplayName": "Texas, United States",
+                "lastSearchName": "Prairie View"
+            },
+            "essId": {
+                "sourceName": "GAI",
+                "sourceId": "9298"
+            },
+            "coordinates": {
+                "lat": "30.093274",
+                "long": "-95.987734"
+            },
+            "hierarchyInfo": {
+                "country": {
+                    "name": "United States",
+                    "isoCode2": "US",
+                    "isoCode3": "USA"
+                }
+            }
+        },
+        {
+            "@type": "gaiaRegionResult",
+            "index": "4",
+            "gaiaId": "553248635114715579",
+            "type": "CITY",
+            "regionNames": {
+                "fullName": "Helpfau-Uttendorf, Upper Austria, Austria",
+                "shortName": "Helpfau-Uttendorf",
+                "displayName": "Helpfau-Uttendorf, Upper Austria, Austria",
+                "primaryDisplayName": "Helpfau-Uttendorf",
+                "secondaryDisplayName": "Upper Austria, Austria",
+                "lastSearchName": "Helpfau-Uttendorf"
+            },
+            "essId": {
+                "sourceName": "GAI",
+                "sourceId": "553248635114715579"
+            },
+            "coordinates": {
+                "lat": "48.153935",
+                "long": "13.118218"
+            },
+            "hierarchyInfo": {
+                "country": {
+                    "name": "Austria",
+                    "isoCode2": "AT",
+                    "isoCode3": "AUT"
+                }
+            }
+        },
+        {
+            "@type": "gaiaRegionResult",
+            "index": "5",
+            "gaiaId": "6113552",
+            "type": "POI",
+            "regionNames": {
+                "fullName": "Helpoort, Maastricht, Limburg, Netherlands",
+                "shortName": "Helpoort",
+                "displayName": "Helpoort, Maastricht, Limburg, Netherlands",
+                "primaryDisplayName": "Helpoort",
+                "secondaryDisplayName": "Maastricht, Limburg, Netherlands",
+                "lastSearchName": "Helpoort"
+            },
+            "essId": {
+                "sourceName": "GAI",
+                "sourceId": "6113552"
+            },
+            "coordinates": {
+                "lat": "50.845491",
+                "long": "5.694598"
+            },
+            "hierarchyInfo": {
+                "country": {
+                    "name": "Netherlands",
+                    "isoCode2": "NL",
+                    "isoCode3": "NLD"
+                }
+            }
+        },
+        {
+            "@type": "gaiaRegionResult",
+            "index": "6",
+            "gaiaId": "3000404867",
+            "type": "CITY",
+            "regionNames": {
+                "fullName": "Helperby, York, England, United Kingdom",
+                "shortName": "Helperby",
+                "displayName": "Helperby, York, England, United Kingdom",
+                "primaryDisplayName": "Helperby",
+                "secondaryDisplayName": "York, England, United Kingdom",
+                "lastSearchName": "Helperby"
+            },
+            "essId": {
+                "sourceName": "GAI",
+                "sourceId": "3000404867"
+            },
+            "coordinates": {
+                "lat": "54.119621",
+                "long": "-1.31164"
+            },
+            "hierarchyInfo": {
+                "country": {
+                    "name": "United Kingdom",
+                    "isoCode2": "GB",
+                    "isoCode3": "GBR"
+                }
+            }
+        },
+        {
+            "@type": "gaiaRegionResult",
+            "index": "7",
+            "gaiaId": "553248635990832802",
+            "type": "CITY",
+            "regionNames": {
+                "fullName": "Helperknapp, Canton Mersch, Luxembourg",
+                "shortName": "Helperknapp",
+                "displayName": "Helperknapp, Canton Mersch, Luxembourg",
+                "primaryDisplayName": "Helperknapp",
+                "secondaryDisplayName": "Canton Mersch, Luxembourg",
+                "lastSearchName": "Helperknapp"
+            },
+            "essId": {
+                "sourceName": "GAI",
+                "sourceId": "553248635990832802"
+            },
+            "coordinates": {
+                "lat": "49.734535",
+                "long": "6.026719"
+            },
+            "hierarchyInfo": {
+                "country": {
+                    "name": "Luxembourg",
+                    "isoCode2": "LU",
+                    "isoCode3": "LUX"
+                }
+            }
+        },
+        {
+            "@type": "gaiaRegionResult",
+            "index": "8",
+            "gaiaId": "553248621532986789",
+            "type": "POI",
+            "regionNames": {
+                "fullName": "Help U Zelve, Antwerp, Flemish Region, Belgium",
+                "shortName": "Help U Zelve",
+                "displayName": "Help U Zelve, Antwerp, Flemish Region, Belgium",
+                "primaryDisplayName": "Help U Zelve",
+                "secondaryDisplayName": "Antwerp, Flemish Region, Belgium",
+                "lastSearchName": "Help U Zelve"
+            },
+            "essId": {
+                "sourceName": "GAI",
+                "sourceId": "553248621532986789"
+            },
+            "coordinates": {
+                "lat": "51.210943",
+                "long": "4.395744"
+            },
+            "hierarchyInfo": {
+                "country": {
+                    "name": "Belgium",
+                    "isoCode2": "BE",
+                    "isoCode3": "BEL"
+                }
+            }
+        },
+        {
+            "@type": "gaiaRegionResult",
+            "index": "9",
+            "gaiaId": "3000713501",
+            "type": "CITY",
+            "regionNames": {
+                "fullName": "Helpston, Peterborough, England, United Kingdom",
+                "shortName": "Helpston",
+                "displayName": "Helpston, Peterborough, England, United Kingdom",
+                "primaryDisplayName": "Helpston",
+                "secondaryDisplayName": "Peterborough, England, United Kingdom",
+                "lastSearchName": "Helpston"
+            },
+            "essId": {
+                "sourceName": "GAI",
+                "sourceId": "3000713501"
+            },
+            "coordinates": {
+                "lat": "52.6167",
+                "long": "-0.3333"
+            },
+            "hierarchyInfo": {
+                "country": {
+                    "name": "United Kingdom",
+                    "isoCode2": "GB",
+                    "isoCode3": "GBR"
+                }
+            }
+        }
+    ]
+}
