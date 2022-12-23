@@ -5,7 +5,7 @@ class UserInputState(StatesGroup):
     command = State()
     input_city = State()
     destinationId = State()
-    quantity = State()
+    quantity_hotels = State()
     photo_need = State()
     photo_count = State()
     pageSize = State()
