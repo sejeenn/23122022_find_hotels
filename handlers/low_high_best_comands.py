@@ -4,7 +4,8 @@ from loguru import logger
 import datetime
 from states.user_inputs import UserInputState
 from api.first_request import find_destination
-from keyboards.inline import city_buttons
+import keyboards.inline
+from keyboards.calendar import calendar
 
 
 @bot.message_handler(commands=['lowprice', 'highprice', 'bestdeal'])
@@ -32,7 +33,7 @@ def input_city(message: Message) -> None:
         data['input_city'] = message.text
         logger.info('Пользователь ввел город: ' + message.text)
         region_ids = find_destination(message.text)
-        city_buttons.show_cities_buttons(message, region_ids)
+        keyboards.inline.city_buttons.show_cities_buttons(message, region_ids)
 
 
 @bot.message_handler(state=UserInputState.quantity_hotels)
@@ -54,7 +55,7 @@ def input_quantity(message):
 @bot.message_handler(state=UserInputState.priceMin)
 def input_price_min(message):
     if message.text.isdigit():
-        logger.info('Input minimum price' + message.text)
+        logger.info('Input minimum price: ' + message.text)
         with bot.retrieve_data(message.chat.id) as data:
             data['price_min'] = message.text
         bot.set_state(message.chat.id, UserInputState.priceMax)
@@ -66,9 +67,44 @@ def input_price_min(message):
 @bot.message_handler(state=UserInputState.priceMax)
 def input_price_max(message):
     if message.text.isdigit():
-        logger.info('Input maximum price' + message.text)
+        logger.info('Input maximum price: ' + message.text)
         with bot.retrieve_data(message.chat.id) as data:
-            data['price_max'] = message.text
-        print(data)
+            if int(data['price_min']) < int(message.text):
+                data['price_max'] = message.text
+                keyboards.inline.photo_need.show_buttons_photo_need_yes_no(message)
+            else:
+                bot.send_message(message.chat.id, 'Price maximum should be more than minimum! Input again!')
+
     else:
         bot.send_message(message.chat.id, 'It should be a number')
+
+
+@bot.message_handler(state=UserInputState.photo_count)
+def input_photo_quantity(message):
+    if message.text.isdigit():
+        if 1 < int(message.text) < 10:
+            logger.info('Input photo quantity: ' + message.text)
+            with bot.retrieve_data(message.chat.id) as data:
+                data['photo_count'] = message.text
+            calendar.my_calendar(message)
+
+        else:
+            bot.send_message(message.chat.id, 'Number of photos from 1 to 10! Input again!')
+    else:
+        bot.send_message(message.chat.id, 'Only numbers! Input again!')
+
+
+def check_command(message, data):
+    logger.info('Check which command is entered')
+    if data['command'] == '/bestdeal':
+        data['sort'] = "DISTANCE"
+        print(data)
+    else:
+        if data['command'] == '/lowprice':
+            data['sort'] = "PRICE_LOW_TO_HIGH"
+            print(data)
+        elif data['command'] == '/highprice':
+            data['sort'] = "PRICE_HIGH_TO_LOW"
+            print(data)
+
+

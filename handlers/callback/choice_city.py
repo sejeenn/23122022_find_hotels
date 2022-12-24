@@ -6,7 +6,7 @@ from handlers import low_high_best_comands
 
 
 @bot.callback_query_handler(func=lambda call: call.data.isdigit())
-def callback_query(call) -> None:
+def destination_id_callback(call) -> None:
     """
     """
     if call.data:

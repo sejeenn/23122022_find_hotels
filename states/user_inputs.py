@@ -9,6 +9,7 @@ class UserInputState(StatesGroup):
     photo_need = State()
     photo_count = State()
     pageSize = State()
+    input_date = State()
     checkIn = State()
     checkOut = State()
     priceMin = State()
