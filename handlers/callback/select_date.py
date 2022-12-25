@@ -20,18 +20,20 @@ def input_date(call):
         if 'checkInDate' in data:
             checkin = int(data['checkInDate']['year'] + data['checkInDate']['month'] + data['checkInDate']['day'])
             if int(select_date) > checkin:
-                logger.info('Input checkOutDate')
+                logger.info('Ввод и сохранение даты выезда.')
                 data['checkOutDate'] = {'day': day, 'month': month, 'year': year}
-                handlers.low_high_best_comands.check_command(call.message, data)
+
             else:
-                bot.send_message(call.message.chat.id, 'CheckOut must be more checkin')
-                calendar.my_calendar(call.message)
+                bot.send_message(call.message.chat.id, 'Дата выезда должна быть больше даты заезда! '
+                                                       'Повторите выбор даты!')
+                calendar.my_calendar(call.message, 'выезда')
         else:
             if int(select_date) >= int(now):
-                logger.info('Input checkInDate')
+                logger.info('Ввод и сохранение даты заезда.')
                 data['checkInDate'] = {'day': day, 'month': month, 'year': year}
-                calendar.my_calendar(call.message)
+                calendar.my_calendar(call.message, 'выезда')
             else:
-                bot.send_message(call.message.chat.id, 'CheckIn must be more or equal today date')
-                calendar.my_calendar(call.message)
+                bot.send_message(call.message.chat.id, 'Дата заезда должна быть больше или равна сегодняшней дате!'
+                                                       'Повторите выбор даты!')
+                calendar.my_calendar(call.message, 'заезда')
 
