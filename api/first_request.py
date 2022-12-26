@@ -3,6 +3,10 @@ import requests
 from config_data import config
 from loguru import logger
 
+# locations/v3/search - поиск локации по названию
+# properties/v2/list - получение списка отелей по региону
+# properties/v2/detail - подробнее об отеле - адрес, фотки
+
 headers = {
     "X-RapidAPI-Key": config.RAPID_API_KEY,
     "X-RapidAPI-Host": "hotels4.p.rapidapi.com"

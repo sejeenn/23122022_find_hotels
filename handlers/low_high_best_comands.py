@@ -8,7 +8,7 @@ import api
 from keyboards.calendar import calendar
 
 
-def check_command(message, command):
+def check_command(command):
     if command == '/bestdeal':
         return 'DISTANCE'
     elif command == '/lowprice':
@@ -45,7 +45,7 @@ def low_high_best_handler(message: Message) -> None:
         data.clear()
         logger.info('Запоминаем выбранную команду: ' + message.text)
         data['command'] = message.text
-        data['sort'] = check_command(message, message.text)
+        data['sort'] = check_command(message.text)
         data['date_time'] = datetime.datetime.utcnow().strftime('%d.%m.%Y %H:%M:%S')
         data['telegram_id'] = message.from_user.id
         data['chat_id'] = message.chat.id
@@ -136,10 +136,10 @@ def print_data(message, data):
                                       f'Максимальный ценник: {data["price_max"]}\n'
                                       f'Нужны ли фотографии? {data["photo_need"]}\n'
                                       f'Количество фотографий: {data["photo_count"]}\n'
-                                      f'Дата заезда: {data["checkInDate"]["day"]} + "-" + '
-                                      f'{data["checkInDate"]["month"]} + "-" + {data["checkInDate"]["year"]}\n' 
-                                      f'Дата выезда: {data["checkOutDate"]["day"]} + "-" + '
-                                      f'{data["checkInDate"]["month"]} + "-" + {data["checkInDate"]["year"]}\n'
+                                      f'Дата заезда: {data["checkInDate"]["day"]}"-"'
+                                      f'{data["checkInDate"]["month"]}"-"{data["checkInDate"]["year"]}\n' 
+                                      f'Дата выезда: {data["checkOutDate"]["day"]}"-"'
+                                      f'{data["checkInDate"]["month"]}"-"{data["checkInDate"]["year"]}\n'
                      )
     payload = {
         "currency": "USD",
