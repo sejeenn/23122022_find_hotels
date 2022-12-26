@@ -1,10 +1,10 @@
-import handlers.low_high_best_comands
 from loader import bot
 from loguru import logger
 import datetime
 from states.user_inputs import UserInputState
 from keyboards.calendar import calendar
 from telebot_calendar import CallbackData
+from handlers.low_high_best_comands import print_data
 
 calendar_1_callback = CallbackData("calendar_1", "action", "year", "month", "day")
 
@@ -22,7 +22,11 @@ def input_date(call):
             if int(select_date) > checkin:
                 logger.info('Ввод и сохранение даты выезда.')
                 data['checkOutDate'] = {'day': day, 'month': month, 'year': year}
-
+                if data['sort'] == 'DISTANCE':
+                    bot.set_state(call.message.chat.id, UserInputState.landmarkIn)
+                    bot.send_message(call.message.chat.id, 'Введите начало диапазона расстояния от центра (км).')
+                else:
+                    print_data(call.message, data)
             else:
                 bot.send_message(call.message.chat.id, 'Дата выезда должна быть больше даты заезда! '
                                                        'Повторите выбор даты!')

@@ -6,7 +6,7 @@ data = {'command': '/lowprice', 'date_time': '24.12.2022 10:54:51', 'telegram_id
         'price_min': '5', 'price_max': '7', 'photo_need': 'no', 'photo_count': '0',
         'checkInDate': {'day': '24', 'month': '12', 'year': '2022'},
         'checkOutDate': {'day': '31', 'month': '12', 'year': '2022'}}
-if data['command'] == '/lowprice':
-    data['sort'] = "PRICE_LOW_TO_HIGH"
 
-print(data)
+
+print(data['checkInDate']['day'] + '-' + data['checkInDate']['month'] + '-' + data['checkInDate']['year'])
+

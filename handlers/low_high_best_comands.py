@@ -3,18 +3,39 @@ from telebot.types import Message
 from loguru import logger
 import datetime
 from states.user_inputs import UserInputState
-from api.first_request import find_destination
 import keyboards.inline
+import api
 from keyboards.calendar import calendar
 
 
-def check_command(command):
-    if command == '/lowprice':
+def check_command(message, command):
+    if command == '/bestdeal':
+        return 'DISTANCE'
+    elif command == '/lowprice':
         return 'PRICE_LOW_TO_HIGH'
     elif command == '/highprice':
         return 'PRICE_HIGH_TO_LOW'
+
+
+@bot.message_handler(state=UserInputState.landmarkIn)
+def input_landmark_in(message):
+    if message.text.isdigit():
+        with bot.retrieve_data(message.chat.id) as data:
+            data['landmark_in'] = message.text
+        bot.set_state(message.chat.id, UserInputState.landmarkOut)
+        bot.send_message(message.chat.id, 'Введите конец диапазона расстояния от центра (км).')
     else:
-        return 'DISTANCE'
+        bot.send_message(message.chat.id, 'Ошибка! Вы ввели не число! Повторите ввод!')
+
+
+@bot.message_handler(state=UserInputState.landmarkOut)
+def input_landmark_out(message):
+    if message.text.isdigit():
+        with bot.retrieve_data(message.chat.id) as data:
+            data['landmark_out'] = message.text
+            print_data(message, data)
+    else:
+        bot.send_message(message.chat.id, 'Ошибка! Вы ввели не число! Повторите ввод!')
 
 
 @bot.message_handler(commands=['lowprice', 'highprice', 'bestdeal'])
@@ -24,7 +45,7 @@ def low_high_best_handler(message: Message) -> None:
         data.clear()
         logger.info('Запоминаем выбранную команду: ' + message.text)
         data['command'] = message.text
-        data['sort'] = check_command(message.text)
+        data['sort'] = check_command(message, message.text)
         data['date_time'] = datetime.datetime.utcnow().strftime('%d.%m.%Y %H:%M:%S')
         data['telegram_id'] = message.from_user.id
         data['chat_id'] = message.chat.id
@@ -42,7 +63,7 @@ def input_city(message: Message) -> None:
     with bot.retrieve_data(message.chat.id) as data:
         data['input_city'] = message.text
         logger.info('Пользователь ввел город: ' + message.text)
-        region_ids = find_destination(message.text)
+        region_ids = api.first_request.find_destination(message.text)
         keyboards.inline.city_buttons.show_cities_buttons(message, region_ids)
 
 
@@ -103,5 +124,46 @@ def input_photo_quantity(message):
         bot.send_message(message.chat.id, 'Ошибка! Вы ввели не число! Повторите ввод!')
 
 
+def print_data(message, data):
+    print(data)
+    bot.send_message(message.chat.id, 'Проверим правильность введённых данных:\n'
+                                      f'Дата и время запроса: {data["date_time"]}\n'
+                                      f'Введена команда: {data["command"]}\n'
+                                      f'Вы ввели город: {data["input_city"]}\n'
+                                      f'Выбран город с id: {data["destination_id"]}\n'
+                                      f'Количество отелей: {data["quantity_hotels"]}\n'
+                                      f'Минимальный ценник: {data["price_min"]}\n'
+                                      f'Максимальный ценник: {data["price_max"]}\n'
+                                      f'Нужны ли фотографии? {data["photo_need"]}\n'
+                                      f'Количество фотографий: {data["photo_count"]}\n'
+                                      f'Дата заезда: {data["checkInDate"]["day"]} + "-" + '
+                                      f'{data["checkInDate"]["month"]} + "-" + {data["checkInDate"]["year"]}\n' 
+                                      f'Дата выезда: {data["checkOutDate"]["day"]} + "-" + '
+                                      f'{data["checkInDate"]["month"]} + "-" + {data["checkInDate"]["year"]}\n'
+                     )
+    payload = {
+        "currency": "USD",
+        "eapid": 1,
+        "locale": "en_US",
+        "siteId": 300000001,
+        "destination": {"regionId": data['destination_id']},
+        "checkInDate": data['checkInDate'],
+        "checkOutDate": data['checkOutDate'],
+        "rooms": [
+            {
+                "adults": 2,
+                "children": [{"age": 5}, {"age": 7}]
+            }
+        ],
+        "resultsStartingIndex": 0,
+        "resultsSize": int(data["quantity_hotels"]),
+        "sort": data['sort'],
+        "filters": {"price": {
+            "max": data['price_max'],
+            "min": data['price_min']
+        }}
+    }
 
+    # with bot.retrieve_data(message.chat.id) as data:
+    #     data.clear()
 
