@@ -1,7 +1,7 @@
 from loader import bot
 from telebot.types import Message
 from loguru import logger
-import datetime
+import datetime, time
 from states.user_inputs import UserInputState
 import keyboards.inline
 import api
@@ -46,8 +46,7 @@ def low_high_best_handler(message: Message) -> None:
         logger.info('Запоминаем выбранную команду: ' + message.text)
         data['command'] = message.text
         data['sort'] = check_command(message.text)
-        data['date_time'] = datetime.datetime.utcnow().strftime('%d.%m.%Y %H:%M:%S')
-        data['telegram_id'] = message.from_user.id
+        data['date_time'] = datetime.datetime.fromtimestamp(time.time(), tz=None).strftime('%d.%m.%Y %H:%M:%S')
         data['chat_id'] = message.chat.id
     bot.set_state(message.chat.id, UserInputState.input_city)
     bot.send_message(message.from_user.id, "Введите город в котором нужно найти отель: ")
@@ -136,10 +135,10 @@ def print_data(message, data):
                                       f'Максимальный ценник: {data["price_max"]}\n'
                                       f'Нужны ли фотографии? {data["photo_need"]}\n'
                                       f'Количество фотографий: {data["photo_count"]}\n'
-                                      f'Дата заезда: {data["checkInDate"]["day"]}"-"'
-                                      f'{data["checkInDate"]["month"]}"-"{data["checkInDate"]["year"]}\n' 
-                                      f'Дата выезда: {data["checkOutDate"]["day"]}"-"'
-                                      f'{data["checkInDate"]["month"]}"-"{data["checkInDate"]["year"]}\n'
+                                      f'Дата заезда: {data["checkInDate"]["day"]}-'
+                                      f'{data["checkInDate"]["month"]}-{data["checkInDate"]["year"]}\n' 
+                                      f'Дата выезда: {data["checkOutDate"]["day"]}-'
+                                      f'{data["checkInDate"]["month"]}-{data["checkInDate"]["year"]}\n'
                      )
     payload = {
         "currency": "USD",
