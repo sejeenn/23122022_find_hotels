@@ -10,8 +10,7 @@
 #
 # print(data['checkInDate']['day'] + '-' + data['checkInDate']['month'] + '-' + data['checkInDate']['year'])
 #
+import datetime
+year, month, day = datetime.datetime.now().strftime('%Y.%m.%d').split('.')
+print(year, '-', month, '-', int(day))
 
-import datetime, time
-
-my_time = datetime.datetime.fromtimestamp(time.time(), tz=None).strftime('%d.%m.%Y %H:%M:%S')
-print(my_time)

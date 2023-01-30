@@ -124,7 +124,6 @@ def input_photo_quantity(message):
 
 
 def print_data(message, data):
-    print(data)
     bot.send_message(message.chat.id, 'Проверим правильность введённых данных:\n'
                                       f'Дата и время запроса: {data["date_time"]}\n'
                                       f'Введена команда: {data["command"]}\n'
@@ -136,7 +135,7 @@ def print_data(message, data):
                                       f'Нужны ли фотографии? {data["photo_need"]}\n'
                                       f'Количество фотографий: {data["photo_count"]}\n'
                                       f'Дата заезда: {data["checkInDate"]["day"]}-'
-                                      f'{data["checkInDate"]["month"]}-{data["checkInDate"]["year"]}\n' 
+                                      f'{data["checkInDate"]["month"]}-{data["checkInDate"]["year"]}\n'
                                       f'Дата выезда: {data["checkOutDate"]["day"]}-'
                                       f'{data["checkInDate"]["month"]}-{data["checkInDate"]["year"]}\n'
                      )
@@ -146,8 +145,16 @@ def print_data(message, data):
         "locale": "en_US",
         "siteId": 300000001,
         "destination": {"regionId": data['destination_id']},
-        "checkInDate": data['checkInDate'],
-        "checkOutDate": data['checkOutDate'],
+        "checkInDate": {
+            'day': int(data["checkInDate"]["day"]),
+            'month': int(data["checkInDate"]["month"]),
+            'year': int(data["checkInDate"]["day"])
+        },
+        "checkOutDate": {
+            'day': int(data["checkOutDate"]["day"]),
+            'month': int(data["checkOutDate"]["month"]),
+            'year': int(data["checkOutDate"]["day"])
+        },
         "rooms": [
             {
                 "adults": 2,
@@ -162,7 +169,6 @@ def print_data(message, data):
             "min": data['price_min']
         }}
     }
-
+    print(payload)
     # with bot.retrieve_data(message.chat.id) as data:
     #     data.clear()
-
