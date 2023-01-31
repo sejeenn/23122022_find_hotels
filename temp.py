@@ -10,7 +10,10 @@
 #
 # print(data['checkInDate']['day'] + '-' + data['checkInDate']['month'] + '-' + data['checkInDate']['year'])
 #
+temp = Call
 import datetime
 year, month, day = datetime.datetime.now().strftime('%Y.%m.%d').split('.')
-print(year, '-', month, '-', int(day))
-
+# print(datetime.datetime(year, month, 1))
+now = datetime.datetime.now()
+print(datetime.datetime.now().strftime('%Y.%m.%d'))
+print(year, month, day)

@@ -33,10 +33,6 @@ RUSSIAN_LANGUAGE = Language(
 
 
 class Calendar:
-    """
-    Calendar data factory
-    """
-
     __lang: Language
 
     def __init__(self, language: Language = RUSSIAN_LANGUAGE):
@@ -44,7 +40,7 @@ class Calendar:
 
     def create_calendar(
         self,
-        name: str = "calendar",
+        name: str = "calendar_1",
         year: int = None,
         month: int = None,
     ) -> InlineKeyboardMarkup:
@@ -56,14 +52,11 @@ class Calendar:
         :param month: Month to use in the calendar if you are not using the current month.
         :return: Returns an InlineKeyboardMarkup object with a calendar.
         """
-
         now_day = datetime.datetime.now()
-
         if year is None:
             year = now_day.year
         if month is None:
             month = now_day.month
-
         calendar_callback = CallbackData(name, "action", "year", "month", "day")
         data_ignore = calendar_callback.new("IGNORE", year, month, "!")
         data_months = calendar_callback.new("MONTHS", year, month, "!")
@@ -73,6 +66,7 @@ class Calendar:
         keyboard.add(
             InlineKeyboardButton(
                 self.__lang.months[month - 1] + " " + str(year),
+                print(self.__lang.months[0]),
                 callback_data=data_months,
             )
         )

@@ -2,22 +2,22 @@ from loader import bot
 from loguru import logger
 import datetime
 from states.user_inputs import UserInputState
-from keyboards.calendar import calendar
-from telebot_calendar import CallbackData
+from keyboards.calendar.telebot_calendar import CallbackData
 from handlers.low_high_best_comands import print_data
 
-calendar_1_callback = CallbackData("calendar_1", "action", "year", "month", "day")
+calendar_callback = CallbackData("calendar", "action", "year", "month", "day")
 
 
-@bot.callback_query_handler(func=lambda call: call.data.startswith(calendar_1_callback.prefix))
+@bot.callback_query_handler(func=lambda call: call.data.startswith(calendar_callback.prefix))
 def input_date(call):
-    name, action, year, month, day = call.data.split(calendar_1_callback.sep)
-    now_year, now_month, now_day = datetime.datetime.now().strftime('%Y.%m.%d').split('.')
-    print(action)
-    now_month = int(now_month)
-    now_day = int(now_day)
-    now = now_year + str(now_month) + str(now_day)
+    name, action, year, month, day = call.data.split(calendar_callback.sep)
+    # now_year, now_month, now_day = datetime.datetime.now().strftime('%Y.%m.%d').split('.')
+    print(call.data.split(calendar_callback.sep))
+    # now_month = int(now_month)
+    # now_day = int(now_day)
+    # now = now_year + str(now_month) + str(now_day)
     select_date = year + month + day
+    now = datetime.datetime.now().strftime('%Y%m%d')
     print(now)
     print(select_date)
     #bot.delete_message(call.message.chat.id, call.message.message_id)

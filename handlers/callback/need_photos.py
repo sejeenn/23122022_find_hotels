@@ -2,7 +2,7 @@ from loader import bot
 from telebot.types import Message
 from loguru import logger
 from states.user_inputs import UserInputState
-from keyboards.calendar import calendar
+from handlers.low_high_best_comands import my_calendar
 
 
 @bot.callback_query_handler(func=lambda call: call.data.isalpha())
@@ -18,5 +18,5 @@ def need_photo_callback(call) -> None:
             data['photo_need'] = call.data
             data['photo_count'] = '0'
         bot.delete_message(call.message.chat.id, call.message.message_id)
-        calendar.my_calendar(call.message, 'заезда')
+        my_calendar(call.message, 'заезда')
 

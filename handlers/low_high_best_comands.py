@@ -5,7 +5,7 @@ import datetime
 from states.user_inputs import UserInputState
 import keyboards.inline
 import api
-from keyboards.calendar import calendar
+from keyboards.calendar.telebot_calendar import Calendar
 
 
 def check_command(command):
@@ -40,6 +40,8 @@ def input_landmark_out(message):
 
 @bot.message_handler(commands=['lowprice', 'highprice', 'bestdeal'])
 def low_high_best_handler(message: Message) -> None:
+
+    my_calendar(message, 'test_calendar')
     bot.set_state(message.chat.id, UserInputState.command)
     with bot.retrieve_data(message.chat.id) as data:
         data.clear()
@@ -116,7 +118,7 @@ def input_photo_quantity(message):
             logger.info('Ввод и запись количества фотографий: ' + message.text)
             with bot.retrieve_data(message.chat.id) as data:
                 data['photo_count'] = message.text
-            calendar.my_calendar(message, 'заезда')
+            my_calendar(message, 'заезда')
 
         else:
             bot.send_message(message.chat.id, 'Число фотографий должно быть в диапазоне от 1 до 10! Повторите ввод!')
@@ -164,6 +166,11 @@ def print_data(message, data):
         }}
     }
 
-    # with bot.retrieve_data(message.chat.id) as data:
-    #     data.clear()
+
+bot_calendar = Calendar()
+
+
+def my_calendar(message: Message, word):
+    bot.send_message(message.chat.id, f'Выберите дату: {word}',
+                     reply_markup=bot_calendar.create_calendar(), )
 
