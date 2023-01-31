@@ -53,24 +53,27 @@ class Calendar:
         :return: Returns an InlineKeyboardMarkup object with a calendar.
         """
         now_day = datetime.datetime.now()
+        print(now_day)
         if year is None:
             year = now_day.year
         if month is None:
             month = now_day.month
+
         calendar_callback = CallbackData(name, "action", "year", "month", "day")
         data_ignore = calendar_callback.new("IGNORE", year, month, "!")
         data_months = calendar_callback.new("MONTHS", year, month, "!")
 
         keyboard = InlineKeyboardMarkup(row_width=7)
 
+        # Начальная шапка "месяц и год"
         keyboard.add(
             InlineKeyboardButton(
                 self.__lang.months[month - 1] + " " + str(year),
-                print(self.__lang.months[0]),
                 callback_data=data_months,
             )
         )
 
+        # дни недели
         keyboard.add(
             *[
                 InlineKeyboardButton(day, callback_data=data_ignore)
@@ -78,6 +81,7 @@ class Calendar:
             ]
         )
 
+        # Вывод дней недели
         for week in calendar.monthcalendar(year, month):
             row = list()
             for day in week:
@@ -106,6 +110,7 @@ class Calendar:
                     )
             keyboard.add(*row)
 
+        # Вывод кнопок смены месяца
         keyboard.add(
             InlineKeyboardButton(
                 "Предыдущий месяц",
@@ -230,11 +235,6 @@ class Calendar:
                 ),
             )
             return None
-        elif action == "CANCEL":
-            bot.delete_message(
-                chat_id=call.message.chat.id, message_id=call.message.message_id
-            )
-            return "CANCEL", None
         else:
             bot.answer_callback_query(callback_query_id=call.id, text="ERROR!")
             bot.delete_message(
