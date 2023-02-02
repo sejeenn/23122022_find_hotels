@@ -40,8 +40,6 @@ def input_landmark_out(message):
 
 @bot.message_handler(commands=['lowprice', 'highprice', 'bestdeal'])
 def low_high_best_handler(message: Message) -> None:
-
-    my_calendar(message, 'test_calendar')
     bot.set_state(message.chat.id, UserInputState.command)
     with bot.retrieve_data(message.chat.id) as data:
         data.clear()
@@ -52,7 +50,7 @@ def low_high_best_handler(message: Message) -> None:
         data['telegram_id'] = message.from_user.id
         data['chat_id'] = message.chat.id
     bot.set_state(message.chat.id, UserInputState.input_city)
-    bot.send_message(message.from_user.id, "Введите город в котором нужно найти отель: ")
+    bot.send_message(message.from_user.id, "Введите город в котором нужно найти отель (на латинице): ")
 
 
 @bot.message_handler(state=UserInputState.input_city)
@@ -65,8 +63,15 @@ def input_city(message: Message) -> None:
     with bot.retrieve_data(message.chat.id) as data:
         data['input_city'] = message.text
         logger.info('Пользователь ввел город: ' + message.text)
-        region_ids = api.first_request.find_destination(message.text)
-        keyboards.inline.city_buttons.show_cities_buttons(message, region_ids)
+
+        # Создаем запрос для поиска вариантов городов
+        url = "https://hotels4.p.rapidapi.com/locations/v3/search"
+        querystring = {"q": message.text, "locale": "en_US"}
+        query = api.general_request.request('GET', url, querystring)
+        print(query.text)
+
+        # region_ids = api.first_request.find_destination(message.text)
+        # keyboards.inline.city_buttons.show_cities_buttons(message, region_ids)
 
 
 @bot.message_handler(state=UserInputState.quantity_hotels)
@@ -77,7 +82,7 @@ def input_quantity(message):
             with bot.retrieve_data(message.chat.id) as data:
                 data['quantity_hotels'] = message.text
             bot.set_state(message.chat.id, UserInputState.priceMin)
-            bot.send_message(message.chat.id, 'Введите минимальную стоимость отеля:')
+            bot.send_message(message.chat.id, 'Введите минимальную стоимость отеля в долларах США:')
         else:
             bot.send_message(message.chat.id, 'Ошибка! Это должно быть число в диапазоне от 1 до 25! Повторите ввод!')
     else:
@@ -91,7 +96,7 @@ def input_price_min(message):
         with bot.retrieve_data(message.chat.id) as data:
             data['price_min'] = message.text
         bot.set_state(message.chat.id, UserInputState.priceMax)
-        bot.send_message(message.chat.id, 'Введите максимальную стоимость отеля:')
+        bot.send_message(message.chat.id, 'Введите максимальную стоимость отеля в долларах США:')
     else:
         bot.send_message(message.chat.id, 'Ошибка! Вы ввели не число! Повторите ввод!')
 
@@ -127,7 +132,7 @@ def input_photo_quantity(message):
 
 
 def print_data(message, data):
-    print(data)
+    logger.info('Вывод суммарной информации о параметрах запроса пользователем.')
     bot.send_message(message.chat.id, 'Проверим правильность введённых данных:\n'
                                       f'Дата и время запроса: {data["date_time"]}\n'
                                       f'Введена команда: {data["command"]}\n'
@@ -138,19 +143,29 @@ def print_data(message, data):
                                       f'Максимальный ценник: {data["price_max"]}\n'
                                       f'Нужны ли фотографии? {data["photo_need"]}\n'
                                       f'Количество фотографий: {data["photo_count"]}\n'
-                                      f'Дата заезда: {data["checkInDate"]["day"]}"-"'
-                                      f'{data["checkInDate"]["month"]}"-"{data["checkInDate"]["year"]}\n' 
-                                      f'Дата выезда: {data["checkOutDate"]["day"]}"-"'
-                                      f'{data["checkInDate"]["month"]}"-"{data["checkInDate"]["year"]}\n'
+                                      f'Дата заезда: {data["checkInDate"]["day"]}-'
+                                      f'{data["checkInDate"]["month"]}-{data["checkInDate"]["year"]}\n' 
+                                      f'Дата выезда: {data["checkOutDate"]["day"]}-'
+                                      f'{data["checkOutDate"]["month"]}-{data["checkOutDate"]["year"]}\n'
                      )
+    
+    # Формирование запроса на поиск отелей
     payload = {
         "currency": "USD",
         "eapid": 1,
         "locale": "en_US",
         "siteId": 300000001,
         "destination": {"regionId": data['destination_id']},
-        "checkInDate": data['checkInDate'],
-        "checkOutDate": data['checkOutDate'],
+        "checkInDate": {
+            'day': int(data['checkInDate']['day']),
+            'month': int(data['checkInDate']['month']),
+            'year': int(data['checkInDate']['year'])
+        },
+        "checkOutDate": {
+            'day': int(data['checkOutDate']['day']),
+            'month': int(data['checkOutDate']['month']),
+            'year': int(data['checkOutDate']['year'])
+        },
         "rooms": [
             {
                 "adults": 2,
@@ -165,6 +180,7 @@ def print_data(message, data):
             "min": data['price_min']
         }}
     }
+    print(payload)
 
 
 bot_calendar = Calendar()

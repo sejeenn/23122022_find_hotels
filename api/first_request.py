@@ -8,6 +8,7 @@ from loguru import logger
 # properties/v2/detail - подробнее об отеле - адрес, фотки
 
 headers = {
+    "content-type": "application/json",
     "X-RapidAPI-Key": config.RAPID_API_KEY,
     "X-RapidAPI-Host": "hotels4.p.rapidapi.com"
 }
@@ -19,7 +20,7 @@ def find_destination(city: str):
     querystring = {"q": city, "locale": "en_US"}
     possible_cities = {}
     try:
-        query = requests.request("GET", url, headers=headers, params=querystring)
+        query = requests.request("GET", url, params=querystring, headers=headers)
         if query.status_code != 200:
             raise LookupError(f'Status code {query.status_code}')
         if not query:
