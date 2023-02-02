@@ -1,5 +1,5 @@
 import requests
-import json
+import processing_json
 url = "https://hotels4.p.rapidapi.com/properties/v2/list"
 data = {'command': '/lowprice', 'sort': 'PRICE_LOW_TO_HIGH', 'date_time': '26.12.2022 09:12:20',
         'telegram_id': 732418186, 'chat_id': 732418186, 'input_city': 'rome', 'destination_id': '5194566',
@@ -60,7 +60,7 @@ payload = {
     }
 
 headers = {
-    "content-type": "application/json",
+    "content-type": "application/processing_json",
     "X-RapidAPI-Key": "25f90d3cdfmsh2cc6038b4e63c63p1d9fd5jsn2aad67a79b56",
     "X-RapidAPI-Host": "hotels4.p.rapidapi.com"
 }
@@ -68,7 +68,7 @@ headers = {
 response = requests.request("POST", url, json=payload, headers=headers)
 data = response.json()
 with open('find_hotels.json', 'w', encoding='utf-8') as f:
-    json.dump(data, f, ensure_ascii=False, indent=4)
+    processing_json.dump(data, f, ensure_ascii=False, indent=4)
 print(response.status_code)
 print(response.text)
 print(payload)

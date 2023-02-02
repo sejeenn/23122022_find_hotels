@@ -8,7 +8,7 @@ from loguru import logger
 # properties/v2/detail - подробнее об отеле - адрес, фотки
 
 headers = {
-    "content-type": "application/json",
+    "content-type": "application/processing_json",
     "X-RapidAPI-Key": config.RAPID_API_KEY,
     "X-RapidAPI-Host": "hotels4.p.rapidapi.com"
 }

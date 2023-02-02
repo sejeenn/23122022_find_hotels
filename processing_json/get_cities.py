@@ -1,9 +1,10 @@
 import json
 
 
-def get_city(query):
+def get_city(query_text):
+    # попробуем расшифровать json
     possible_cities = {}
-    data = json.loads(query.text)
+    data = json.loads(query_text)
     if not data:
         raise LookupError('Запрос пуст...')
     for id_place in data['sr']:
@@ -11,6 +12,8 @@ def get_city(query):
             possible_cities[id_place['gaiaId']] = {
                 "gaiaId": id_place['gaiaId'],
                 "regionNames": id_place['regionNames']['fullName']
-                }
+            }
         except KeyError:
             continue
+    print(possible_cities)
+    return possible_cities

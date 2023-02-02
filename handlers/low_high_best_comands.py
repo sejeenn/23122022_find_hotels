@@ -5,6 +5,7 @@ import datetime
 from states.user_inputs import UserInputState
 import keyboards.inline
 import api
+import processing_json
 from keyboards.calendar.telebot_calendar import Calendar
 
 
@@ -64,14 +65,12 @@ def input_city(message: Message) -> None:
         data['input_city'] = message.text
         logger.info('Пользователь ввел город: ' + message.text)
 
-        # Создаем запрос для поиска вариантов городов
+        # Создаем запрос для поиска вариантов городов и генерируем клавиатуру
         url = "https://hotels4.p.rapidapi.com/locations/v3/search"
         querystring = {"q": message.text, "locale": "en_US"}
-        query = api.general_request.request('GET', url, querystring)
-        print(query.text)
-
-        # region_ids = api.first_request.find_destination(message.text)
-        # keyboards.inline.city_buttons.show_cities_buttons(message, region_ids)
+        query_cities = api.general_request.request('GET', url, querystring)
+        region_ids = processing_json.get_cities.get_city(query_cities.text)
+        keyboards.inline.city_buttons.show_cities_buttons(message, region_ids)
 
 
 @bot.message_handler(state=UserInputState.quantity_hotels)
@@ -152,9 +151,9 @@ def print_data(message, data):
     # Формирование запроса на поиск отелей
     payload = {
         "currency": "USD",
-        "eapid": 1,
+        # "eapid": 1,
         "locale": "en_US",
-        "siteId": 300000001,
+        # "siteId": 300000001,
         "destination": {"regionId": data['destination_id']},
         "checkInDate": {
             'day': int(data['checkInDate']['day']),
@@ -168,19 +167,24 @@ def print_data(message, data):
         },
         "rooms": [
             {
-                "adults": 2,
-                "children": [{"age": 5}, {"age": 7}]
+                "adults": 2
             }
         ],
         "resultsStartingIndex": 0,
         "resultsSize": int(data["quantity_hotels"]),
         "sort": data['sort'],
         "filters": {"price": {
-            "max": data['price_max'],
-            "min": data['price_min']
+            "max": int(data['price_max']),
+            "min": int(data['price_min'])
         }}
     }
     print(payload)
+
+    # формируем запрос на поиск отеля по введенным данным
+    url = "https://hotels4.p.rapidapi.com/properties/v2/list"
+    query_hotels = api.general_request.request('POST', url, payload)
+    # далее нужно расшифровать полученный JSON
+    region_ids = processing_json.get_hotels.get_hotels(query_hotels.text)
 
 
 bot_calendar = Calendar()

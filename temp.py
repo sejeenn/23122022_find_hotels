@@ -5,11 +5,18 @@ headers = {
     "X-RapidAPI-Key": config.RAPID_API_KEY,
     "X-RapidAPI-Host": "hotels4.p.rapidapi.com"
 }
-url = "https://hotels4.p.rapidapi.com/locations/v3/search"
+url = "https://hotels4.p.rapidapi.com/properties/v2/list"
 
 
-def find_destination(city):
-    querystring = {"q": city, "locale": "en_US"}
-    query = requests.request("GET", url, params=querystring, headers=headers)
-    print(query.text)
+payload = {'currency': 'USD',  'locale': 'en_US',
+           'destination': {'regionId': '553248633938945217'}, 'checkInDate': {'day': 23, 'month': 2, 'year': 2023},
+           'checkOutDate': {'day': 25, 'month': 2, 'year': 2023},
+           'rooms': [{'adults': 2}], 'resultsStartingIndex': 0,
+           'resultsSize': 5, 'sort': 'PRICE_LOW_TO_HIGH', 'filters': {'price': {'max': '7', 'min': '6'}
+                                                                      }
+           }
 
+
+response = requests.request("POST", url, json=payload, headers=headers)
+
+print(response.text)

@@ -10,6 +10,7 @@ headers = {
 }
 
 
+# проверку необходимо доработать
 def test_request(query):
     try:
         print(query.status_code)
@@ -26,11 +27,12 @@ def test_request(query):
 
 
 def request(method, url, query_string):
-    print('Запрос к серверу')
+    """Посылаем запрос к серверу"""
 
     if method == "GET":
         query_get = requests.request("GET", url, params=query_string, headers=headers)
         return test_request(query_get)
     elif method == "POST":
         query_post = requests.request("POST", url, json=query_string, headers=headers)
+        return test_request(query_post)
 

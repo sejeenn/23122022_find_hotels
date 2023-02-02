@@ -36,7 +36,7 @@ payload = {
 		}}
 }
 headers = {
-	"content-type": "application/json",
+	"content-type": "application/processing_json",
 	"X-RapidAPI-Key": "25f90d3cdfmsh2cc6038b4e63c63p1d9fd5jsn2aad67a79b56",
 	"X-RapidAPI-Host": "hotels4.p.rapidapi.com"
 }
