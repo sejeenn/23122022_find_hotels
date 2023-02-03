@@ -1,13 +1,11 @@
-import telebot_calendar
-
 from loader import bot
 from loguru import logger
 import datetime
 from states.user_inputs import UserInputState
 from keyboards.calendar.telebot_calendar import CallbackData, Calendar
-from handlers.low_high_best_comands import print_data
-import handlers.low_high_best_comands
-import keyboards.calendar.telebot_calendar
+from handlers.user_survey import print_data
+import handlers.user_survey
+
 
 calendar = Calendar()
 calendar_callback = CallbackData("calendar", "action", "year", "month", "day")
@@ -44,17 +42,17 @@ def input_date(call):
                 else:
                     bot.send_message(call.message.chat.id, 'Дата выезда должна быть больше даты заезда! '
                                                            'Повторите выбор даты!')
-                    handlers.low_high_best_comands.my_calendar(call.message, 'выезда')
+                    handlers.user_survey.my_calendar(call.message, 'выезда')
             else:
                 if int(select_date) >= int(now):
                     print('Выбранная дата заезда:', select_date, 'Сегодняшняя дата:', now)
                     logger.info('Ввод и сохранение даты заезда.')
                     data['checkInDate'] = {'day': day, 'month': month, 'year': year}
-                    handlers.low_high_best_comands.my_calendar(call.message, 'выезда')
+                    handlers.user_survey.my_calendar(call.message, 'выезда')
                 else:
                     bot.send_message(call.message.chat.id, 'Дата заезда должна быть больше или равна сегодняшней дате!'
                                                            'Повторите выбор даты!')
-                    handlers.low_high_best_comands.my_calendar(call.message, 'заезда')
+                    handlers.user_survey.my_calendar(call.message, 'заезда')
 
 
 def check_month_day(number):

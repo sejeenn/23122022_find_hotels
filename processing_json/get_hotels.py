@@ -3,20 +3,19 @@ import json
 
 def get_hotels(query_text):
     # попробуем расшифровать json с отелями
-    print(query_text)
-    possible_cities = {}
     data = json.loads(query_text)
-    with open('data_hotels.json', 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=4)
-    # if not data:
-    #     raise LookupError('Запрос пуст...')
-    # for id_place in data['sr']:
-    #     try:
-    #         possible_cities[id_place['gaiaId']] = {
-    #             "gaiaId": id_place['gaiaId'],
-    #             "regionNames": id_place['regionNames']['fullName']
-    #         }
-    #     except KeyError:
-    #         continue
-    # print(possible_cities)
-    # return possible_cities
+    if not data:
+        raise LookupError('Запрос пуст...')
+    hotels_data = {}
+    for hotel in data['data']['propertySearch']['properties']:
+        try:
+            hotels_data[hotel['id']] = {
+                'name': hotel['name'], 'id': hotel['id'],
+                'picture': hotel['propertyImage']['image']['url'],
+                'distance': hotel['destinationInfo']['distanceFromDestination']['value'],
+                'unit': hotel['destinationInfo']['distanceFromDestination']['unit'],
+                'price': hotel['price']['options'][0]['strikeOut']['formatted']
+            }
+        except (KeyError, TypeError):
+            continue
+    return hotels_data

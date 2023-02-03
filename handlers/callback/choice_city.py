@@ -2,7 +2,7 @@ from loader import bot
 from telebot.types import Message
 from loguru import logger
 from states.user_inputs import UserInputState
-from handlers import low_high_best_comands
+from handlers import user_survey
 
 
 @bot.callback_query_handler(func=lambda call: call.data.isdigit())

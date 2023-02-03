@@ -5,8 +5,8 @@ import datetime
 from states.user_inputs import UserInputState
 import keyboards.inline
 import api
-import processing_json
 from keyboards.calendar.telebot_calendar import Calendar
+import processing_json
 
 
 def check_command(command):
@@ -118,7 +118,7 @@ def input_price_max(message):
 @bot.message_handler(state=UserInputState.photo_count)
 def input_photo_quantity(message):
     if message.text.isdigit():
-        if 1 < int(message.text) < 10:
+        if 0 < int(message.text) < 10:
             logger.info('Ввод и запись количества фотографий: ' + message.text)
             with bot.retrieve_data(message.chat.id) as data:
                 data['photo_count'] = message.text
@@ -143,11 +143,11 @@ def print_data(message, data):
                                       f'Нужны ли фотографии? {data["photo_need"]}\n'
                                       f'Количество фотографий: {data["photo_count"]}\n'
                                       f'Дата заезда: {data["checkInDate"]["day"]}-'
-                                      f'{data["checkInDate"]["month"]}-{data["checkInDate"]["year"]}\n' 
+                                      f'{data["checkInDate"]["month"]}-{data["checkInDate"]["year"]}\n'
                                       f'Дата выезда: {data["checkOutDate"]["day"]}-'
                                       f'{data["checkOutDate"]["month"]}-{data["checkOutDate"]["year"]}\n'
                      )
-    
+
     # Формирование запроса на поиск отелей
     payload = {
         "currency": "USD",
@@ -178,13 +178,32 @@ def print_data(message, data):
             "min": int(data['price_min'])
         }}
     }
-    print(payload)
-
     # формируем запрос на поиск отеля по введенным данным
     url = "https://hotels4.p.rapidapi.com/properties/v2/list"
     query_hotels = api.general_request.request('POST', url, payload)
     # далее нужно расшифровать полученный JSON
-    region_ids = processing_json.get_hotels.get_hotels(query_hotels.text)
+    hotels = processing_json.get_hotels.get_hotels(query_hotels.text)
+    # with bot.retrieve_data(message.chat.id) as data:
+    #     data['found_hotels'] = hotels
+    # print(data)
+
+    for hotel in hotels.values():
+        # нужен дополнительный запрос, чтобы узнать как минимум адрес отеля, как максимум фото
+        # формируется новый payload
+        summary_payload = {
+            "currency": "USD",
+            "eapid": 1,
+            "locale": "en_US",
+            "siteId": 300000001,
+            "propertyId": hotel['id']
+        }
+        summary_url = "https://hotels4.p.rapidapi.com/properties/v2/get-summary"
+        get_summary = api.general_request.request('POST', summary_url, summary_payload)
+
+        caption = f'ID: {hotel["id"]}\nНазвание: ' \
+                  f'{hotel["name"]}\n Стоимость: {hotel["price"]}\n Расстояние до центра: ' \
+                  f'{str(hotel["distance"])} {hotel["unit"]}\n'
+        bot.send_message(message.chat.id, caption)
 
 
 bot_calendar = Calendar()
@@ -193,4 +212,3 @@ bot_calendar = Calendar()
 def my_calendar(message: Message, word):
     bot.send_message(message.chat.id, f'Выберите дату: {word}',
                      reply_markup=bot_calendar.create_calendar(), )
-
