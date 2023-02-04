@@ -1,5 +1,5 @@
 from loader import bot
-from telebot.types import Message
+from telebot.types import Message, InputMediaPhoto
 from loguru import logger
 import datetime
 from states.user_inputs import UserInputState
@@ -7,6 +7,7 @@ import keyboards.inline
 import api
 from keyboards.calendar.telebot_calendar import Calendar
 import processing_json
+import random
 
 
 def check_command(command):
@@ -147,7 +148,6 @@ def print_data(message, data):
                                       f'Дата выезда: {data["checkOutDate"]["day"]}-'
                                       f'{data["checkOutDate"]["month"]}-{data["checkOutDate"]["year"]}\n'
                      )
-
     # Формирование запроса на поиск отелей
     payload = {
         "currency": "USD",
@@ -181,15 +181,11 @@ def print_data(message, data):
     # формируем запрос на поиск отеля по введенным данным
     url = "https://hotels4.p.rapidapi.com/properties/v2/list"
     query_hotels = api.general_request.request('POST', url, payload)
-    # далее нужно расшифровать полученный JSON
+    # далее нужно расшифровать полученный JSON, получить словарь нужными данными
     hotels = processing_json.get_hotels.get_hotels(query_hotels.text)
-    # with bot.retrieve_data(message.chat.id) as data:
-    #     data['found_hotels'] = hotels
-    # print(data)
-
+    # проходимся циклом по полученному словарю с отелями
     for hotel in hotels.values():
-        # нужен дополнительный запрос, чтобы узнать как минимум адрес отеля, как максимум фото
-        # формируется новый payload
+        # нужен дополнительный запрос, чтобы получить как минимум адрес отеля, как максимум фото
         summary_payload = {
             "currency": "USD",
             "eapid": 1,
@@ -199,11 +195,41 @@ def print_data(message, data):
         }
         summary_url = "https://hotels4.p.rapidapi.com/properties/v2/get-summary"
         get_summary = api.general_request.request('POST', summary_url, summary_payload)
+        summary, images = processing_json.get_summary.hotel_info(get_summary.text)
+        caption = f'Название: {hotel["name"]}\n ' \
+                  f'Адрес: {summary["address"]}\n' \
+                  f'Стоимость: {hotel["price"]}\n ' \
+                  f'Координаты: {str(summary["coordinates"]["latitude"])} ' \
+                  f'{str(summary["coordinates"]["longitude"])}'
+        medias = []
+        links_to_images = []
+        # добавляем найденные данные в data
+        with bot.retrieve_data(message.chat.id) as data:
+            data[hotel['id']] = {'hotel_id': hotel['id'], 'name': hotel['name'], 'address': summary['address'],
+                                 'price': hotel['price'], 'coordinates': {
+                    'latitude': str(summary["coordinates"]["latitude"]),
+                    'longitude': str(summary["coordinates"]["longitude"])}}
+        # создаем медиа группу с фотками и выводим ее в чат
+        if int(data['photo_count']) > 0:
+            # сформируем рандомный список из ссылок на то количество фотографий
+            # которое заказывает пользователь
+            for random_url in range(int(data['photo_count'])):
+                links_to_images.append(images[random.randint(0, len(images))])
+            # формируем MediaGroup с фотографиями и описанием отеля и посылаем в чат
+            for number, url in enumerate(links_to_images):
+                if number == 0:
+                    medias.append(InputMediaPhoto(media=url, caption=caption))
+                else:
+                    medias.append(InputMediaPhoto(media=url))
+            bot.send_media_group(message.chat.id, medias)
 
-        caption = f'ID: {hotel["id"]}\nНазвание: ' \
-                  f'{hotel["name"]}\n Стоимость: {hotel["price"]}\n Расстояние до центра: ' \
-                  f'{str(hotel["distance"])} {hotel["unit"]}\n'
-        bot.send_message(message.chat.id, caption)
+            with bot.retrieve_data(message.chat.id) as data:
+                data['images_' + hotel['id']] = links_to_images
+        else:
+            # если фотки не нужны, то просто выводим данные об отеле
+            bot.send_message(message.chat.id, caption)
+    print(data)
+    bot.send_message(message.chat.id, 'Поиск окончен!')
 
 
 bot_calendar = Calendar()
