@@ -15,8 +15,6 @@ def check_command(command):
         return 'DISTANCE'
     elif command == '/lowprice':
         return 'PRICE_LOW_TO_HIGH'
-    elif command == '/highprice':
-        return 'PRICE_HIGH_TO_LOW'
 
 
 @bot.message_handler(state=UserInputState.landmarkIn)
@@ -48,20 +46,15 @@ def low_high_best_handler(message: Message) -> None:
         logger.info('Запоминаем выбранную команду: ' + message.text)
         data['command'] = message.text
         data['sort'] = check_command(message.text)
-        data['date_time'] = datetime.datetime.utcnow().strftime('%d.%m.%Y %H:%M:%S')
-        data['telegram_id'] = message.from_user.id
+        data['date_time'] = datetime.datetime.now().strftime('%d.%m.%Y %H:%M:%S')
         data['chat_id'] = message.chat.id
+    print(data)
     bot.set_state(message.chat.id, UserInputState.input_city)
     bot.send_message(message.from_user.id, "Введите город в котором нужно найти отель (на латинице): ")
 
 
 @bot.message_handler(state=UserInputState.input_city)
 def input_city(message: Message) -> None:
-    """
-        Здесь пользователь вводит название интересующего его города, который бот запоминает и
-        отправляет сообщение функцию find_city(message), проверить наличие города
-        :param message:
-    """
     with bot.retrieve_data(message.chat.id) as data:
         data['input_city'] = message.text
         logger.info('Пользователь ввел город: ' + message.text)
@@ -77,7 +70,7 @@ def input_city(message: Message) -> None:
 @bot.message_handler(state=UserInputState.quantity_hotels)
 def input_quantity(message):
     if message.text.isdigit():
-        if 0 < int(message.text) < 25:
+        if 0 < int(message.text) <= 25:
             logger.info('Ввод и запись количества отелей: ' + message.text)
             with bot.retrieve_data(message.chat.id) as data:
                 data['quantity_hotels'] = message.text
@@ -119,7 +112,7 @@ def input_price_max(message):
 @bot.message_handler(state=UserInputState.photo_count)
 def input_photo_quantity(message):
     if message.text.isdigit():
-        if 0 < int(message.text) < 10:
+        if 0 < int(message.text) <= 10:
             logger.info('Ввод и запись количества фотографий: ' + message.text)
             with bot.retrieve_data(message.chat.id) as data:
                 data['photo_count'] = message.text
@@ -133,7 +126,7 @@ def input_photo_quantity(message):
 
 def print_data(message, data):
     logger.info('Вывод суммарной информации о параметрах запроса пользователем.')
-    bot.send_message(message.chat.id, 'Проверим правильность введённых данных:\n'
+    bot.send_message(message.chat.id, 'Исходные данные:\n'
                                       f'Дата и время запроса: {data["date_time"]}\n'
                                       f'Введена команда: {data["command"]}\n'
                                       f'Вы ввели город: {data["input_city"]}\n'
@@ -151,9 +144,9 @@ def print_data(message, data):
     # Формирование запроса на поиск отелей
     payload = {
         "currency": "USD",
-        # "eapid": 1,
+        "eapid": 1,
         "locale": "en_US",
-        # "siteId": 300000001,
+        "siteId": 300000001,
         "destination": {"regionId": data['destination_id']},
         "checkInDate": {
             'day': int(data['checkInDate']['day']),
@@ -171,14 +164,14 @@ def print_data(message, data):
             }
         ],
         "resultsStartingIndex": 0,
-        "resultsSize": int(data["quantity_hotels"]),
+        "resultsSize": 5,
         "sort": data['sort'],
         "filters": {"price": {
             "max": int(data['price_max']),
             "min": int(data['price_min'])
         }}
     }
-    # формируем запрос на поиск отеля по введенным данным
+    # зная id отеля, делаем запрос о детальной информации
     url = "https://hotels4.p.rapidapi.com/properties/v2/list"
     query_hotels = api.general_request.request('POST', url, payload)
     # далее нужно расшифровать полученный JSON, получить словарь нужными данными
@@ -204,8 +197,8 @@ def print_data(message, data):
         medias = []
         links_to_images = []
         # добавляем найденные данные в data
-        with bot.retrieve_data(message.chat.id) as data:
-            data[hotel['id']] = {'hotel_id': hotel['id'], 'name': hotel['name'], 'address': summary['address'],
+        with bot.retrieve_data(message.chat.id) as data_hotels:
+            data[hotel['id']] = {'name': hotel['name'], 'address': summary['address'],
                                  'price': hotel['price'], 'coordinates': {
                     'latitude': str(summary["coordinates"]["latitude"]),
                     'longitude': str(summary["coordinates"]["longitude"])}}
@@ -213,8 +206,11 @@ def print_data(message, data):
         if int(data['photo_count']) > 0:
             # сформируем рандомный список из ссылок на то количество фотографий
             # которое заказывает пользователь
-            for random_url in range(int(data['photo_count'])):
-                links_to_images.append(images[random.randint(0, len(images))])
+            try:
+                for random_url in range(int(data['photo_count'])):
+                    links_to_images.append(images[random.randint(0, len(images))])
+            except IndexError:
+                continue
             # формируем MediaGroup с фотографиями и описанием отеля и посылаем в чат
             for number, url in enumerate(links_to_images):
                 if number == 0:
@@ -223,12 +219,12 @@ def print_data(message, data):
                     medias.append(InputMediaPhoto(media=url))
             bot.send_media_group(message.chat.id, medias)
 
-            with bot.retrieve_data(message.chat.id) as data:
-                data['images_' + hotel['id']] = links_to_images
+            with bot.retrieve_data(message.chat.id) as data_hotels:
+                data_hotels['images_' + hotel['id']] = links_to_images
         else:
             # если фотки не нужны, то просто выводим данные об отеле
             bot.send_message(message.chat.id, caption)
-    print(data)
+    print(data_hotels)
     bot.send_message(message.chat.id, 'Поиск окончен!')
 
 
