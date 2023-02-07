@@ -1,16 +1,6 @@
-import json
+any_dict = {'12345': {'any_key': 123, 'and_key': 456, 'and_key3': 789}}
+link = ['www.ya.ru', 'www.github.com']
+any_dict['654'] = {'any': 123, 'and': 456, 'key3': 789}
+any_dict['12345']['link'] = link
 
-with open('get_summary.json', 'r', encoding='utf-8') as f:
-    data = json.load(f)
-
-
-    hotel_data = {
-        'id': data['data']['propertyInfo']['summary']['id'], 'name': data['data']['propertyInfo']['summary']['name'],
-        'address': data['data']['propertyInfo']['summary']['location']['address']['addressLine'],
-        'coordinates': data['data']['propertyInfo']['summary']['location']['coordinates']
-                  }
-    hotel_images = {}
-    count_img = 0
-    for i in data['data']['propertyInfo']['propertyGallery']['images']:
-        hotel_images[count_img] = i['image']['url']
-        count_img += 1
+print(any_dict)

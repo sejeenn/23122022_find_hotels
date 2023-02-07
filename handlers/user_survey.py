@@ -1,5 +1,5 @@
 from loader import bot
-from telebot.types import Message, InputMediaPhoto
+from telebot.types import Message, InputMediaPhoto, Dict
 from loguru import logger
 import datetime
 from states.user_inputs import UserInputState
@@ -10,15 +10,17 @@ import processing_json
 import random
 
 
-def check_command(command):
+def check_command(command: str) -> str:
+    """Проверка команды и назначение параметра сортировки"""
     if command == '/bestdeal':
         return 'DISTANCE'
-    elif command == '/lowprice':
+    elif command == '/lowprice' or command == '/highprice':
         return 'PRICE_LOW_TO_HIGH'
 
 
 @bot.message_handler(state=UserInputState.landmarkIn)
-def input_landmark_in(message):
+def input_landmark_in(message: Message) -> None:
+    """Ввод начала диапазона расстояния от центра"""
     if message.text.isdigit():
         with bot.retrieve_data(message.chat.id) as data:
             data['landmark_in'] = message.text
@@ -29,7 +31,7 @@ def input_landmark_in(message):
 
 
 @bot.message_handler(state=UserInputState.landmarkOut)
-def input_landmark_out(message):
+def input_landmark_out(message: Message) -> None:
     if message.text.isdigit():
         with bot.retrieve_data(message.chat.id) as data:
             data['landmark_out'] = message.text
@@ -48,7 +50,6 @@ def low_high_best_handler(message: Message) -> None:
         data['sort'] = check_command(message.text)
         data['date_time'] = datetime.datetime.now().strftime('%d.%m.%Y %H:%M:%S')
         data['chat_id'] = message.chat.id
-    print(data)
     bot.set_state(message.chat.id, UserInputState.input_city)
     bot.send_message(message.from_user.id, "Введите город в котором нужно найти отель (на латинице): ")
 
@@ -68,7 +69,7 @@ def input_city(message: Message) -> None:
 
 
 @bot.message_handler(state=UserInputState.quantity_hotels)
-def input_quantity(message):
+def input_quantity(message: Message) -> None:
     if message.text.isdigit():
         if 0 < int(message.text) <= 25:
             logger.info('Ввод и запись количества отелей: ' + message.text)
@@ -83,7 +84,7 @@ def input_quantity(message):
 
 
 @bot.message_handler(state=UserInputState.priceMin)
-def input_price_min(message):
+def input_price_min(message: Message) -> None:
     if message.text.isdigit():
         logger.info('Ввод и запись минимальной стоимости отеля: ' + message.text)
         with bot.retrieve_data(message.chat.id) as data:
@@ -95,7 +96,7 @@ def input_price_min(message):
 
 
 @bot.message_handler(state=UserInputState.priceMax)
-def input_price_max(message):
+def input_price_max(message: Message) -> None:
     if message.text.isdigit():
         logger.info('Ввод и запись максимальной стоимости отеля, сравнение с price_min: ' + message.text)
         with bot.retrieve_data(message.chat.id) as data:
@@ -110,7 +111,7 @@ def input_price_max(message):
 
 
 @bot.message_handler(state=UserInputState.photo_count)
-def input_photo_quantity(message):
+def input_photo_quantity(message: Message) -> None:
     if message.text.isdigit():
         if 0 < int(message.text) <= 10:
             logger.info('Ввод и запись количества фотографий: ' + message.text)
@@ -124,7 +125,9 @@ def input_photo_quantity(message):
         bot.send_message(message.chat.id, 'Ошибка! Вы ввели не число! Повторите ввод!')
 
 
-def print_data(message, data):
+def print_data(message: Message, data: Dict):
+    """Выводим в чат всё, что собрали от пользователя и передаем это в функцию поиска
+        отелей"""
     logger.info('Вывод суммарной информации о параметрах запроса пользователем.')
     bot.send_message(message.chat.id, 'Исходные данные:\n'
                                       f'Дата и время запроса: {data["date_time"]}\n'
@@ -139,8 +142,13 @@ def print_data(message, data):
                                       f'Дата заезда: {data["checkInDate"]["day"]}-'
                                       f'{data["checkInDate"]["month"]}-{data["checkInDate"]["year"]}\n'
                                       f'Дата выезда: {data["checkOutDate"]["day"]}-'
-                                      f'{data["checkOutDate"]["month"]}-{data["checkOutDate"]["year"]}\n'
-                     )
+                                      f'{data["checkOutDate"]["month"]}-{data["checkOutDate"]["year"]}\n')
+    data['hotels'] = {}
+    print(data)
+    find_and_show_hotel(message, data)
+
+
+def find_and_show_hotel(message: Message, data: Dict):
     # Формирование запроса на поиск отелей
     payload = {
         "currency": "USD",
@@ -164,19 +172,17 @@ def print_data(message, data):
             }
         ],
         "resultsStartingIndex": 0,
-        "resultsSize": 5,
+        "resultsSize": 3,
         "sort": data['sort'],
         "filters": {"price": {
             "max": int(data['price_max']),
             "min": int(data['price_min'])
         }}
     }
-    # зная id отеля, делаем запрос о детальной информации
     url = "https://hotels4.p.rapidapi.com/properties/v2/list"
     query_hotels = api.general_request.request('POST', url, payload)
-    # далее нужно расшифровать полученный JSON, получить словарь нужными данными
+    hotel_info = {}
     hotels = processing_json.get_hotels.get_hotels(query_hotels.text)
-    # проходимся циклом по полученному словарю с отелями
     for hotel in hotels.values():
         # нужен дополнительный запрос, чтобы получить как минимум адрес отеля, как максимум фото
         summary_payload = {
@@ -196,12 +202,6 @@ def print_data(message, data):
                   f'{str(summary["coordinates"]["longitude"])}'
         medias = []
         links_to_images = []
-        # добавляем найденные данные в data
-        with bot.retrieve_data(message.chat.id) as data_hotels:
-            data[hotel['id']] = {'name': hotel['name'], 'address': summary['address'],
-                                 'price': hotel['price'], 'coordinates': {
-                    'latitude': str(summary["coordinates"]["latitude"]),
-                    'longitude': str(summary["coordinates"]["longitude"])}}
         # создаем медиа группу с фотками и выводим ее в чат
         if int(data['photo_count']) > 0:
             # сформируем рандомный список из ссылок на то количество фотографий
@@ -212,25 +212,30 @@ def print_data(message, data):
             except IndexError:
                 continue
             # формируем MediaGroup с фотографиями и описанием отеля и посылаем в чат
+            hotels_info = {hotel['id']: {'name': hotel['name'], 'address': summary['address'],
+                                         'price': hotel['price'], 'coordinates': {
+                    'latitude': str(summary["coordinates"]["latitude"]),
+                    'longitude': str(summary["coordinates"]["longitude"])}},
+                           'links': links_to_images
+                           }
             for number, url in enumerate(links_to_images):
                 if number == 0:
                     medias.append(InputMediaPhoto(media=url, caption=caption))
                 else:
                     medias.append(InputMediaPhoto(media=url))
+            print(hotels_info)
             bot.send_media_group(message.chat.id, medias)
 
-            with bot.retrieve_data(message.chat.id) as data_hotels:
-                data_hotels['images_' + hotel['id']] = links_to_images
         else:
             # если фотки не нужны, то просто выводим данные об отеле
             bot.send_message(message.chat.id, caption)
-    print(data_hotels)
+
     bot.send_message(message.chat.id, 'Поиск окончен!')
 
 
 bot_calendar = Calendar()
 
 
-def my_calendar(message: Message, word):
+def my_calendar(message: Message, word: str) -> None:
     bot.send_message(message.chat.id, f'Выберите дату: {word}',
                      reply_markup=bot_calendar.create_calendar(), )
