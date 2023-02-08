@@ -8,18 +8,18 @@ my_data = {
 }
 
 connect = sqlite3.connect('user_input.db')
-# with connect:
-#     connect.execute("""
-#         CREATE TABLE USER (
-#             id integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-#             command TEXT,
-#             sort TEXT,
-#             date_time TEXT,
-#             chat_id INTEGER
-#         );
-#     """)
+with connect:
+    connect.execute("""
+        CREATE TABLE IF NOT EXISTS user_input (
+            id integer NOT NULL PRIMARY KEY AUTOINCREMENT,
+            command TEXT,
+            sort TEXT,
+            date_time TEXT,
+            chat_id INTEGER
+        );
+    """)
 
-sql = 'INSERT INTO USER (id, command, sort, date_time, chat_id) values(?, ?, ?, ?, ?)'
+sql = 'INSERT INTO user_input (id, command, sort, date_time, chat_id) values(?, ?, ?, ?, ?)'
 data = [
         (1, my_data['command'], my_data['sort'], my_data['date_time'], my_data['chat_id'])
 
